@@ -7,7 +7,8 @@
   "scripts": {
     "build": "webpack --config webpack/config.js",
     "build-min": "webpack --config webpack/config-min.js",
-    "test": "jest --coverage"
+    "codecov": "codecov",
+    "test": "jest"
   },
   "author": "Will Goto <will.r.goto@gmail.com>",
   "license": "ISC",
@@ -21,11 +22,14 @@
     "babel-loader": "6.2.5",
     "babel-preset-es2015": "6.14.0",
     "babel-preset-react": "6.11.1",
+    "codecov": "1.0.1",
     "jest": "15.1.1",
     "react-addons-test-utils": "15.3.2",
     "webpack": "1.13.2"
   },
   "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
     "testPathDirs": [
       "tests"
     ],
