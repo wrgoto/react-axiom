@@ -13,6 +13,7 @@
   "author": "Will Goto <will.r.goto@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "lodash": "4.16.4",
     "react": "15.3.2"
   },
   "devDependencies": {

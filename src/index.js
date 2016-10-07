@@ -3,6 +3,7 @@ import provide    from './components/provide';
 import subscribe  from './components/subscribe';
 import Model      from './models/Model';
 import Publisher  from './models/Publisher';
+import Store      from './models/Store';
 
 
 export {
@@ -10,7 +11,8 @@ export {
   provide,
   subscribe,
   Model,
-  Publisher
+  Publisher,
+  Store
 };
 
 
@@ -19,5 +21,6 @@ export default {
   provide,
   subscribe,
   Model,
-  Publisher
+  Publisher,
+  Store
 };
