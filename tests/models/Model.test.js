@@ -13,9 +13,10 @@ const obj = { id: '1' };
 //============
 
 class Test extends Model {
-  constructor({ id }) {
+  constructor({ id, test = true }) {
     super();
-    this.state = { id, obj };
+    this.state = { id, obj, test };
+    this.setAccessors();
   }
 }
 
@@ -45,6 +46,42 @@ describe('Model', () => {
     it('should respond to publish', () => {
       expect(model.publish).toBeDefined();
       expect(model.publish instanceof Function).toBe(true);
+    });
+  });
+
+  describe('setAccessors', () => {
+    describe('when state is not a boolean', () => {
+      it('should create a get function', () => {
+        expect(model.getId()).toBe(model.state.id);
+      });
+
+      it('should create a set function', () => {
+        jest.useFakeTimers();
+        model.setId('2');
+        jest.runOnlyPendingTimers();
+        expect(model.state.id).toBe('2');
+      });
+
+      it('should create a has function', () => {
+        expect(model.hasId()).toBe(true);
+      });
+    });
+
+    describe('when state is a boolean', () => {
+      it('should create an is function', () => {
+        expect(model.isTest()).toBe(true);
+      });
+
+      it('should create a set function', () => {
+        jest.useFakeTimers();
+        model.setTest(false);
+        jest.runOnlyPendingTimers();
+        expect(model.state.test).toBe(false);
+      });
+
+      it('should create a has function', () => {
+        expect(model.hasTest()).toBe(true);
+      });
     });
   });
 
