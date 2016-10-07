@@ -3,7 +3,8 @@ import ReactAxiom, {
   provide,
   subscribe,
   Model,
-  Publisher
+  Publisher,
+  Store
 } from '../src/index';
 
 
@@ -31,6 +32,10 @@ describe('ReactAxiom', () => {
 
     it('should respond to Publisher', () => {
       expect(ReactAxiom.Publisher).toBeDefined();
+    });
+
+    it('should respond to Store', () => {
+      expect(ReactAxiom.Store).toBeDefined();
     });
   });
 
@@ -61,6 +66,12 @@ describe('ReactAxiom', () => {
   describe('Publisher', () => {
     it('should be defined', () => {
       expect(Publisher).toBeDefined();
+    });
+  });
+
+  describe('Store', () => {
+    it('should be defined', () => {
+      expect(Store).toBeDefined();
     });
   });
 });
