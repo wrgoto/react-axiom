@@ -12,10 +12,10 @@ export default class Model extends Publisher {
 
     if (diff) {
       // FOR LOGGING
-      // console.groupCollapsed(this);
-      // console.log('%cnext', 'font-weight: bold;', next);
-      // console.log('%cprev', 'color: grey; font-weight: bold;', prev);
-      // console.groupEnd();
+      console.groupCollapsed(this);
+      console.log('%cnext', 'font-weight: bold;', next);
+      console.log('%cprev', 'color: grey; font-weight: bold;', prev);
+      console.groupEnd();
 
       setTimeout(() => {
         Object.assign(this.state, nextState);
