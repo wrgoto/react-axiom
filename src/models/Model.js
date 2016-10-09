@@ -3,6 +3,13 @@ import Publisher from './Publisher';
 
 export default class Model extends Publisher {
 
+  constructor(state) {
+    super();
+    this.state = state;
+    this.setAccessors();
+  }
+
+
   //================
   // PUBLIC METHODS
   //================

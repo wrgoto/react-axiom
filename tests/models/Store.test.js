@@ -55,15 +55,13 @@ const object = {
 
 class List extends Model {
   constructor({ id, listItems = [], otherList = null }) {
-    super();
-    this.state = { id, listItems, otherList };
+    super({ id, listItems, otherList });
   }
 }
 
 class ListItem extends Model {
   constructor({ id, dependencies = [] }) {
-    super();
-    this.state = { id, dependencies };
+    super({ id, dependencies });
   }
 }
 

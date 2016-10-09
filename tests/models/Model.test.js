@@ -13,10 +13,8 @@ const obj = { id: '1' };
 //============
 
 class Test extends Model {
-  constructor({ id, test = true }) {
-    super();
-    this.state = { id, obj, test };
-    this.setAccessors();
+  constructor({ id, test = true, obj = {} }) {
+    super({ id, test, obj });
   }
 }
 
@@ -29,7 +27,7 @@ describe('Model', () => {
   let model;
 
   beforeEach(() => {
-    model = new Test({ id: '1' });
+    model = new Test({ id: '1', obj });
   });
 
   describe('as a publishable', () => {
