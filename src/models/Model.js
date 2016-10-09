@@ -11,11 +11,14 @@ export default class Model extends Publisher {
     const { prev, next, diff } = this.diffState(nextState);
 
     if (diff) {
-      // FOR LOGGING
-      // console.groupCollapsed(this);
-      // console.log('%cnext', 'font-weight: bold;', next);
-      // console.log('%cprev', 'color: grey; font-weight: bold;', prev);
-      // console.groupEnd();
+      // FOR LOGGING: this is only temporary
+      const { groupCollapsed, groupEnd, log } = console;
+      if (groupCollapsed && groupEnd && log) {
+        groupCollapsed(this);
+        log('%cnext', 'font-weight: bold;', next);
+        log('%cprev', 'color: grey; font-weight: bold;', prev);
+        groupEnd();
+      }
 
       setTimeout(() => {
         Object.assign(this.state, nextState);
