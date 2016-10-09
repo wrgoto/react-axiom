@@ -64,9 +64,7 @@ describe('Model', () => {
       });
 
       it('should create a set function', () => {
-        jest.useFakeTimers();
         model.setId('2');
-        jest.runOnlyPendingTimers();
         expect(model.state.id).toBe('2');
       });
 
@@ -81,9 +79,7 @@ describe('Model', () => {
       });
 
       it('should create a set function', () => {
-        jest.useFakeTimers();
         model.setTest(false);
-        jest.runOnlyPendingTimers();
         expect(model.state.test).toBe(false);
       });
 
@@ -100,9 +96,7 @@ describe('Model', () => {
 
     describe('when diff is immutable', () => {
       beforeEach(() => {
-        jest.useFakeTimers();
         model.setState({ id: '2' });
-        jest.runOnlyPendingTimers();
       });
 
       it('should update the state', () => {
@@ -116,10 +110,8 @@ describe('Model', () => {
 
     describe('when diff is mutable', () => {
       beforeEach(() => {
-        jest.useFakeTimers();
         obj.id = '2';
         model.setState({ obj });
-        jest.runOnlyPendingTimers();
       });
 
       it('should update the state via mutation', () => {
