@@ -24,10 +24,8 @@ export default class Model extends Publisher {
       // console.log('%cprev', 'color: grey; font-weight: bold;', prev);
       // console.groupEnd();
 
-      setTimeout(() => {
-        Object.assign(this.state, nextState);
-        this.publish();
-      }, 0);
+      Object.assign(this.state, nextState);
+      this.publish();
     }
   }
 
