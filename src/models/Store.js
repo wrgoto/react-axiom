@@ -5,9 +5,8 @@ import Model          from './Model';
 export default class Store extends Model {
 
   constructor({ models = [], state = {} }) {
-    super();
+    super(state);
     this.initModelNamesHash(models);
-    this.state = state;
   }
 
 
