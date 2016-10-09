@@ -3,7 +3,7 @@ import Publisher from './Publisher';
 
 export default class Model extends Publisher {
 
-  constructor(state) {
+  constructor(state = {}) {
     super();
     this.state = state;
     this.setAccessors();

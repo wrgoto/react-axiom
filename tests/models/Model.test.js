@@ -18,6 +18,8 @@ class Test extends Model {
   }
 }
 
+class TestWithoutState extends Model {}
+
 
 //==================
 // SUBSCRIBER TESTS
@@ -25,9 +27,17 @@ class Test extends Model {
 
 describe('Model', () => {
   let model;
+  let modelWithoutState;
 
   beforeEach(() => {
     model = new Test({ id: '1', obj });
+    modelWithoutState = new TestWithoutState();
+  });
+
+  describe('state', () => {
+    it('should default to an empty state object', () => {
+      expect(modelWithoutState.state).toEqual({});
+    });
   });
 
   describe('as a publishable', () => {
