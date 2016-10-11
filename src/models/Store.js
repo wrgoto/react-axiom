@@ -63,13 +63,13 @@ export default class Store extends Model {
     if (data instanceof Model) {
       const { constructor, state } = data;
 
-      if (!store[constructor.name][state.id]) {
-        store[constructor.name][state.id] = this.toSerializableState(state, store);
+      if (!store[constructor.name][data._id]) {
+        store[constructor.name][data._id] = this.toSerializableState(state, store);
       }
 
       return {
         _constructor: constructor.name,
-        id: state.id
+        _id: data._id
       };
     }
 
@@ -88,15 +88,17 @@ export default class Store extends Model {
     if (isPlainObject(data)) {
       if (data._constructor) {
         const name = data._constructor;
+        const id = data._id;
 
-        if (newModels[name][data.id]) {
-          return newModels[name][data.id];
+        if (newModels[name][id]) {
+          return newModels[name][id];
         }
 
         delete data._constructor;
-        const state = this.fromSerializable(models[name][data.id], models, newModels);
+        delete data._id;
+        const state = this.fromSerializable(models[name][id], models, newModels);
         const newModel =  new this.modelsHash[name](state);
-        newModels[name][data.id] = newModel;
+        newModels[name][id] = newModel;
         return newModel;
       }
 
