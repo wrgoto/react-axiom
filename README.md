@@ -2,115 +2,89 @@
 
 [![npm version](https://badge.fury.io/js/react-axiom.svg)](https://badge.fury.io/js/react-axiom) [![Build Status](https://travis-ci.org/wgoto/react-axiom.svg?branch=master)](https://travis-ci.org/wgoto/react-axiom) [![codecov](https://codecov.io/gh/wgoto/react-axiom/branch/master/graph/badge.svg)](https://codecov.io/gh/wgoto/react-axiom)
 
-React Axiom is a way to use models with React.
+## Getting Started
 
-## Introduction
-
-React Axiom introduces the concept of models for data management.
-
-To update a React Component with React Redux:
-
-```jsx
-if (this.props.person.pockets.every(pocket => pocket.dollars === 0)) {
-  this.props.dispatch(personAddDollarsToPocket(20));
-}
 ```
-
-To update a React Component with React Axiom:
-
-```jsx
-if (this.props.person.hasNoDollars()) {
-  this.props.person.giveDollars(20);
-}
+npm install --save react-axiom
 ```
-
-### Why?
-
-- **It decreases the cost of change.**  
-Suppose the person in the above example begins carrying money in their hand. A utility function would help abstract this logic, but why should a utility function know how this person stores money? What if it varies between people?
-
-- **It increases code transparency.**  
-Method names are much easier to understand. The above example illustrates that we want to check that the person has no money, it's obvious which is easier to read.
-
-- **It encourages better organization of data.**  
-Not sure where to put data? How will it be used? Who will use it? Models ease the decision of where to put new data, whether existing or new.
-
-- **It makes unit testing easier.**  
-Tests that use models do not need knowledge of how data is structured; only a stub is required. This isolates your units and decouples them from data organization.
-
-## Usage
-
-Extend the React Axiom `Model` class:
-
-```jsx
-import { Model } from 'react-axiom';
-
-class Person extends Model {
-  constructor({ id, dollars = 0 }) {
-    super();
-    this.state = { id, dollars };
-  }
-  
-  getDollars() {
-    return this.state.dollars;
-  }
-  
-  hasNoDollars() {
-    return this.getDollars() === 0;
-  }
-
-  giveDollars(dollars) {
-    this.setState({
-      dollars: this.getDollars() + dollars
-    });
-  }
-}
-
-export default Person;
-```
-
-Look familiar? The React Axiom Model uses the same naming conventions to trigger updates in React Components. The following is a typical React Component class:
-
-```jsx
-import React from 'react';
-
-class Teller extends React.Component {
-  render() {  
-    return this.props.person.hasNoDollars() ? this.renderButton() : 'Customer already has $20!';
-  }
-  
-  renderButton() {
-    return (
-      <button onClick={() => this.props.person.giveDollars(20)}>
-        Give $20
-      </button>
-    );
-  }
-}
-
-export default Teller;
-```
-
-To put it all together:
-
-```jsx
-import ReactDom from 'react-dom';
-import { subscribe } from 'react-axiom';
-import Person from 'Person.js';
-import Teller from 'Teller.js';
-
-// Create an instance of Person i.e. instance of Model
-const customer = new Person({ id: 'Johnny', dollars: 0 });
-
-// Wrap the Teller React Component with a Subscriber class
-const TellerSubscriber = subscribe({ component: Teller });
-
-// Subscriber class will auto-subscribe to any instance of Model passed as a prop
-ReactDOM.render(<TellerSubscriber person={customer} />, document.getElementById('bank'));
-```
-
-That's it! The component will work as expected.
 
 ## Documentation
 
-- [API](docs/api.md)
+- [API Documentation](https://wgoto.gitbooks.io/react-axiom/content)
+
+## Introduction
+
+React Axiom is a lightweight (~12kb) way to use models with the React component tree. A basic React Axiom model looks like the following:
+
+```jsx
+class ListItemModel extends ReactAxiom.Model {
+
+  constructor({ id, description = '', completed = false }) {
+    super({ id, description, completed });
+  }
+
+}
+```
+
+Model stores the argument object in this.state and automatically creates getter and setter functions: `getId`, `setId`, `hasId` for the `id` property, `getDescription`, `setDescription`, `hasDescription` for the `description` property, and `isCompleted`, `setCompleted`, `hasCompleted` for the `completed` property (note: this is different due to the completed property being a boolean). Defining a method of the same name on the class overwrites the getter or setter:
+
+```jsx
+class ListItemModel extends ReactAxiom.Model {
+
+  constructor({ id, description = '', completed = false }) {
+    super({ id, description, completed });
+  }
+
+  getDescription() {
+    return this.state.description.toLowerCase();
+  }
+
+}
+```
+
+When a React Axiom model is passed into a component, the component listens to state changes within the model and updates itself. The following is an example of a React component using a model passed as `listItem` below:
+
+```jsx
+class ListItemComponent extends React.Component {
+
+  render() {
+    const { listItem } = this.props;
+    return (
+      <li>
+        {listItem.getDescription()}
+        {listItem.isCompleted() ? null : this.renderButton()}
+      </li>
+    );
+  }
+
+  renderButton() {
+    const { listItem } = this.props;
+    return (
+      <button onClick={() => listItem.setCompleted(true)}>
+        complete
+      </button>
+    );
+  }
+
+}
+```
+
+Notice how the component calls `setCompleted` on the `listItem` model to update state. To put everything together:
+
+```jsx
+const listItem = new ListItemModel({
+  id: '1',
+  description: 'Teach mom how to use Slack'
+});
+
+const ListItemSubscriber = ReactAxiom.subscribe({
+  component: ListItemComponent
+});
+
+ReactDOM.render(
+  <ListItemSubscriber listItem={listItem} />,
+  document.getElementById('app')
+);
+```
+
+The higher order `subscribe` function wraps the `ListItemComponent` and returns a new `ListItemSubscriber` component. The `ListItemSubscriber` component will then subscribe to the `listItem` model and update itself if state changes. In the specific above example, clicking on the complete button will cause the button to disappear.
