@@ -20,6 +20,15 @@ class Test extends Model {
 
 class TestWithoutState extends Model {}
 
+class TestWithDefaultState extends Model {
+  static defaultState() {
+    return {
+      test: true,
+      obj: { foo: 'bar' }
+    };
+  }
+}
+
 
 //==================
 // SUBSCRIBER TESTS
@@ -28,15 +37,28 @@ class TestWithoutState extends Model {}
 describe('Model', () => {
   let model;
   let modelWithoutState;
+  let modelWithDefaultState;
 
   beforeEach(() => {
     model = new Test({ id: '1', obj });
     modelWithoutState = new TestWithoutState();
+    modelWithDefaultState = new TestWithDefaultState();
   });
 
   describe('state', () => {
-    it('should default to an empty state object', () => {
-      expect(modelWithoutState.state).toEqual({});
+    describe('if defaultState is not defined', () => {
+      it('should default to an empty state object', () => {
+        expect(modelWithoutState.state).toEqual({});
+      });
+    });
+
+    describe('if defaultState is defined', () => {
+      it('should default to the correct default state', () => {
+        expect(modelWithDefaultState.state).toEqual({
+          test: true,
+          obj: { foo: 'bar' }
+        });
+      });
     });
   });
 
