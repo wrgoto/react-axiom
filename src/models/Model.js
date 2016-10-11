@@ -3,8 +3,20 @@ import Publisher from './Publisher';
 
 export default class Model extends Publisher {
 
+  //==================
+  // CLASS PROPERTIES
+  //==================
+
+  static baseId = 1;
+
+
+  //=============
+  // CONSTRUCTOR
+  //=============
+
   constructor(state) {
     super();
+    this.initId();
     this.initState(state);
     this.createHelpers();
   }
@@ -33,6 +45,11 @@ export default class Model extends Publisher {
   //=================
   // PRIVATE METHODS
   //=================
+
+  initId() {
+    this._id = Model.baseId;
+    Model.baseId += 1;
+  }
 
   initState(state) {
     this.state =  this.constructor.defaultState ? this.constructor.defaultState() : {};
