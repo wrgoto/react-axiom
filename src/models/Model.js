@@ -3,10 +3,10 @@ import Publisher from './Publisher';
 
 export default class Model extends Publisher {
 
-  constructor(state = {}) {
+  constructor(state) {
     super();
-    this.state = state;
-    this.setAccessors();
+    this.initState(state);
+    this.createHelpers();
   }
 
 
@@ -34,7 +34,12 @@ export default class Model extends Publisher {
   // PRIVATE METHODS
   //=================
 
-  setAccessors() {
+  initState(state) {
+    this.state =  this.constructor.defaultState ? this.constructor.defaultState() : {};
+    Object.assign(this.state, state);
+  }
+
+  createHelpers() {
     Object.keys(this.state).forEach(key => {
       const cappedKey = key[0].toUpperCase() + key.substring(1);
       const getKey = `get${cappedKey}`;
