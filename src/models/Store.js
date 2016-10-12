@@ -94,8 +94,6 @@ export default class Store extends Model {
           return newModels[name][id];
         }
 
-        delete data._constructor;
-        delete data._id;
         const state = this.fromSerializable(models[name][id], models, newModels);
         const newModel =  new this.modelsHash[name](state);
         newModels[name][id] = newModel;
