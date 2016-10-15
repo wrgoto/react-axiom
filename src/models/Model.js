@@ -10,9 +10,9 @@ export default class Model extends Publisher {
   static baseId = 1;
 
 
-  //==================
-  // CLASS PROPERTIES
-  //==================
+  //===============
+  // CLASS METHODS
+  //===============
 
   static defaultState() {
     return {};
@@ -31,9 +31,9 @@ export default class Model extends Publisher {
   }
 
 
-  //================
-  // PUBLIC METHODS
-  //================
+  //=====================
+  // INTERFACING METHODS
+  //=====================
 
   initState(state) {
     this.state = Object.assign(this.constructor.defaultState(), state);
@@ -84,9 +84,9 @@ export default class Model extends Publisher {
   }
 
 
-  //=================
-  // PRIVATE METHODS
-  //=================
+  //==================
+  // INTERNAL METHODS
+  //==================
 
   _initId() {
     this._id = Model.baseId;

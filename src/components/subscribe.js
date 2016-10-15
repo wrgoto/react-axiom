@@ -41,9 +41,9 @@ export default function subscribe({ component }) {
     }
 
 
-    //=================
-    // PRIVATE METHODS
-    //=================
+    //==================
+    // INTERNAL METHODS
+    //==================
 
     getPublishables() {
       return Object.keys(this.props).reduce((publishables, key) => {

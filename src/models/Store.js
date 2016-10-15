@@ -10,9 +10,9 @@ export default class Store extends Model {
   }
 
 
-  //================
-  // PUBLIC METHODS
-  //================
+  //=====================
+  // INTERFACING METHODS
+  //=====================
 
   stringify() {
     const models = this.createModelsHash();
@@ -27,9 +27,9 @@ export default class Store extends Model {
   }
 
 
-  //=================
-  // PRIVATE METHODS
-  //=================
+  //==================
+  // INTERNAL METHODS
+  //==================
 
   initModelNamesHash(models) {
     this.modelsHash = models.reduce((hash, model) => {

@@ -18,9 +18,9 @@ export default function provide({ component, childContextTypes }) {
     }
 
 
-    //=================
-    // PRIVATE METHODS
-    //=================
+    //==================
+    // INTERNAL METHODS
+    //==================
 
     getChildContext() {
       return this.pickProps();

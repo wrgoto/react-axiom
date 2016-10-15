@@ -18,9 +18,9 @@ export default function connect({ component, contextTypes }) {
     }
 
 
-    //=================
-    // PRIVATE METHODS
-    //=================
+    //==================
+    // INTERNAL METHODS
+    //==================
 
     getChildProps() {
       return Object.assign(this.pickContext(), this.props);
