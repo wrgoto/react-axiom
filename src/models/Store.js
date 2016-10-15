@@ -6,108 +6,115 @@ export default class Store extends Model {
 
   constructor({ models = [], state = {} }) {
     super(state);
-    this.initModelNamesHash(models);
+    this._initModelNamesHash(models);
   }
 
 
-  //================
-  // PUBLIC METHODS
-  //================
+  //=====================
+  // INTERFACING METHODS
+  //=====================
 
   stringify() {
-    const models = this.createModelsHash();
-    const state = this.toSerializableState(this.state, models);
+    const models = this._createModelsHash();
+    const state = this._toSerialState(this.state, models);
     return JSON.stringify({ state, models });
   }
 
   parse(json) {
     const { state, models } = JSON.parse(json);
-    const newModels = this.createModelsHash();
-    this.state = this.fromSerializableState(state, models, newModels);
+    const newModels = this._createModelsHash();
+    this.state = this._fromSerialState(state, models, newModels);
   }
 
 
-  //=================
-  // PRIVATE METHODS
-  //=================
+  //==================
+  // INTERNAL METHODS
+  //==================
 
-  initModelNamesHash(models) {
+  _initModelNamesHash(models) {
     this.modelsHash = models.reduce((hash, model) => {
       hash[model.name] = model;
       return hash;
     }, {});
   }
 
-  createModelsHash() {
+  _createModelsHash() {
     return Object.keys(this.modelsHash).reduce((hash, key) => {
       hash[key] = {};
       return hash;
     }, {});
   }
 
-  toSerializableState(state, store) {
+  _toSerial(data, store) {
+    if (data instanceof Model) {
+      return this._toSerialModel(data, store);
+    }
+
+    if (isPlainObject(data)) {
+      return this._toSerialState(data, store);
+    }
+
+    if (data instanceof Array) {
+      return data.map(datum => this._toSerial(datum, store));
+    }
+
+    return data;
+  }
+
+  _toSerialState(state, store) {
     return Object.keys(state).reduce((serializableState, key) => {
-      serializableState[key] = this.toSerializable(state[key], store);
+      serializableState[key] = this._toSerial(state[key], store);
       return serializableState;
     }, {});
   }
 
-  fromSerializableState(state, models, newModels) {
+  _toSerialModel(model, store) {
+    const { _id, constructor, state } = model;
+    const _constructor = constructor.name;
+
+    if (!store[_constructor][_id]) {
+      store[_constructor][_id] = this._toSerialState(state, store);
+    }
+
+    return { _constructor, _id };
+  }
+
+  _fromSerial(data, models, newModels) {
+    if (isPlainObject(data)) {
+      if (data._constructor) {
+        return this._fromSerialModel(data, models, newModels);
+      }
+
+      return this._fromSerialState(data, models, newModels);
+    }
+
+    if (data instanceof Array) {
+      return data.map(datum => this._fromSerial(datum, models, newModels));
+    }
+
+    return data;
+  }
+
+  _fromSerialState(state, models, newModels) {
     return Object.keys(state).reduce((finalState, key) => {
-      finalState[key] = this.fromSerializable(state[key], models, newModels);
+      finalState[key] = this._fromSerial(state[key], models, newModels);
       return finalState;
     }, {});
   }
 
-  toSerializable(data, store) {
-    if (data instanceof Model) {
-      const { constructor, state } = data;
+  _fromSerialModel(model, models, newModels) {
+    const { _id, _constructor } = model;
+    const newModelHash = newModels[_constructor];
 
-      if (!store[constructor.name][data._id]) {
-        store[constructor.name][data._id] = this.toSerializableState(state, store);
-      }
-
-      return {
-        _constructor: constructor.name,
-        _id: data._id
-      };
+    if (newModelHash[_id]) {
+      return newModelHash[_id];
     }
 
-    if (isPlainObject(data)) {
-      return this.toSerializableState(data, store);
-    }
+    const newModel = new this.modelsHash[_constructor](
+      this._fromSerial(models[_constructor][_id], models, newModels)
+    );
 
-    if (data instanceof Array) {
-      return data.map(datum => this.toSerializable(datum, store));
-    }
-
-    return data;
-  }
-  
-  fromSerializable(data, models, newModels) {
-    if (isPlainObject(data)) {
-      if (data._constructor) {
-        const name = data._constructor;
-        const id = data._id;
-
-        if (newModels[name][id]) {
-          return newModels[name][id];
-        }
-
-        const state = this.fromSerializable(models[name][id], models, newModels);
-        const newModel =  new this.modelsHash[name](state);
-        newModels[name][id] = newModel;
-        return newModel;
-      }
-
-      return this.fromSerializableState(data, models, newModels);
-    }
-
-    if (data instanceof Array) {
-      return data.map(datum => this.fromSerializable(datum, models, newModels));
-    }
-
-    return data;
+    return newModelHash[_id] = newModel;
   }
 
 }

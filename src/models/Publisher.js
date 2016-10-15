@@ -5,9 +5,9 @@ export default class Publisher {
   }
 
 
-  //================
-  // PUBLIC METHODS
-  //================
+  //=====================
+  // INTERFACING METHODS
+  //=====================
 
   subscribe(callback) {
     this._subscriptions.push(callback);

@@ -17,16 +17,16 @@ export default function connect({ component, contextTypes }) {
       return React.createElement(component, this.getChildProps());
     }
 
-
-    //=================
-    // PRIVATE METHODS
-    //=================
-
     getChildProps() {
-      return Object.assign(this.pickContext(), this.props);
+      return Object.assign(this._pickContext(), this.props);
     }
 
-    pickContext() {
+
+    //==================
+    // INTERNAL METHODS
+    //==================
+
+    _pickContext() {
       return Object.keys(contextTypes).reduce((context, key) => {
         context[key] = this.context[key];
         return context;
