@@ -30,9 +30,9 @@ class TestWithDefaultState extends Model {
 }
 
 
-//==================
-// SUBSCRIBER TESTS
-//==================
+//=============
+// MODEL TESTS
+//=============
 
 describe('Model', () => {
   let model;
@@ -43,23 +43,6 @@ describe('Model', () => {
     model = new Test({ id: '1', obj });
     modelWithoutState = new TestWithoutState();
     modelWithDefaultState = new TestWithDefaultState();
-  });
-
-  describe('state', () => {
-    describe('if defaultState is not defined', () => {
-      it('should default to an empty state object', () => {
-        expect(modelWithoutState.state).toEqual({});
-      });
-    });
-
-    describe('if defaultState is defined', () => {
-      it('should default to the correct default state', () => {
-        expect(modelWithDefaultState.state).toEqual({
-          test: true,
-          obj: { foo: 'bar' }
-        });
-      });
-    });
   });
 
   describe('as a publishable', () => {
@@ -79,7 +62,24 @@ describe('Model', () => {
     });
   });
 
-  describe('setAccessors', () => {
+  describe('initState', () => {
+    describe('if defaultState is not defined', () => {
+      it('should default to an empty state object', () => {
+        expect(modelWithoutState.state).toEqual({});
+      });
+    });
+
+    describe('if defaultState is defined', () => {
+      it('should default to the correct default state', () => {
+        expect(modelWithDefaultState.state).toEqual({
+          test: true,
+          obj: { foo: 'bar' }
+        });
+      });
+    });
+  });
+
+  describe('createHelpers', () => {
     describe('when state is not a boolean', () => {
       it('should create a get function', () => {
         expect(model.getId()).toBe(model.state.id);
