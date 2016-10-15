@@ -17,16 +17,16 @@ export default function provide({ component, childContextTypes }) {
       return React.createElement(component, this.props);
     }
 
+    getChildContext() {
+      return this._pickProps();
+    }
+
 
     //==================
     // INTERNAL METHODS
     //==================
 
-    getChildContext() {
-      return this.pickProps();
-    }
-
-    pickProps() {
+    _pickProps() {
       return Object.keys(this.props).reduce((props, key) => {
         if (key !== 'children') props[key] = this.props[key];
         return props;

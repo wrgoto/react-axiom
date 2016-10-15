@@ -19,8 +19,8 @@ export default function subscribe({ component }) {
     constructor(props) {
       super(props);
       this.forceUpdate = this.forceUpdate.bind(this);
-      this.subscribe = this.subscribe.bind(this);
-      this.unsubscribe = this.unsubscribe.bind(this);
+      this._subscribe = this._subscribe.bind(this);
+      this._unsubscribe = this._unsubscribe.bind(this);
     }
 
 
@@ -29,11 +29,11 @@ export default function subscribe({ component }) {
     //===============
 
     componentWillMount() {
-      this.getPublishables().forEach(this.subscribe);
+      this._getPublishables().forEach(this._subscribe);
     }
 
     componentWillUnmount() {
-      this.getPublishables().forEach(this.unsubscribe);
+      this._getPublishables().forEach(this._unsubscribe);
     }
 
     render() {
@@ -45,26 +45,26 @@ export default function subscribe({ component }) {
     // INTERNAL METHODS
     //==================
 
-    getPublishables() {
+    _getPublishables() {
       return Object.keys(this.props).reduce((publishables, key) => {
-        if (this.isPublishable(this.props[key])) {
+        if (this._isPublishable(this.props[key])) {
           publishables.push(this.props[key]);
         }
         return publishables;
       }, []);
     }
 
-    isPublishable(prop) {
+    _isPublishable(prop) {
       return PUBLISHABLE_FUNCTION_NAMES.every(name => {
         return prop[name] && prop[name] instanceof Function;
       });
     }
 
-    subscribe(publishable) {
+    _subscribe(publishable) {
       publishable.subscribe(this.forceUpdate);
     }
 
-    unsubscribe(publishable) {
+    _unsubscribe(publishable) {
       publishable.unsubscribe(this.forceUpdate);
     }
 
