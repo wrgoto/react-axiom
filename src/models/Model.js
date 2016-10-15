@@ -10,6 +10,15 @@ export default class Model extends Publisher {
   static baseId = 1;
 
 
+  //==================
+  // CLASS PROPERTIES
+  //==================
+
+  static defaultState() {
+    return {};
+  }
+
+
   //=============
   // CONSTRUCTOR
   //=============
