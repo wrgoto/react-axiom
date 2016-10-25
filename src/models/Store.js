@@ -4,9 +4,24 @@ import Model          from './Model';
 
 export default class Store extends Model {
 
-  constructor({ models = [], state = {} }) {
-    super(state);
-    this._initModelNamesHash(models);
+  //==================
+  // CLASS PROPERTIES
+  //==================
+
+  static models = [];
+  static modelsHash = {};
+
+
+  //===============
+  // CLASS METHODS
+  //===============
+
+  static setModelRefs(models) {
+    Store.models = models;
+    Store.modelsHash = models.reduce((hash, model) => {
+      hash[model.name] = model;
+      return hash;
+    }, {});
   }
 
 
@@ -31,15 +46,8 @@ export default class Store extends Model {
   // INTERNAL METHODS
   //==================
 
-  _initModelNamesHash(models) {
-    this.modelsHash = models.reduce((hash, model) => {
-      hash[model.name] = model;
-      return hash;
-    }, {});
-  }
-
   _createModelsHash() {
-    return Object.keys(this.modelsHash).reduce((hash, key) => {
+    return Object.keys(Store.modelsHash).reduce((hash, key) => {
       hash[key] = {};
       return hash;
     }, {});
@@ -110,7 +118,7 @@ export default class Store extends Model {
       return newModelHash[_id];
     }
 
-    const newModel = new this.modelsHash[_constructor](
+    const newModel = new Store.modelsHash[_constructor](
       this._fromSerial(models[_constructor][_id], models, newModels)
     );
 

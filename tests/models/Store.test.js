@@ -95,16 +95,19 @@ list2.setOtherList(list1);
 describe('Store', () => {
   let store;
   let state;
-  let models;
   let output;
+
+  beforeEach(() => {
+    Store.setModelRefs([ List, ListItem ]);
+  });
 
   describe('parse', () => {
     describe('with non-Model data', () => {
       beforeEach(() => {
         state = { string, number, float, bool, array, object };
-        store = new Store({ state });
+        store = new Store(state);
         output = store.stringify();
-        store = new Store({});
+        store = new Store();
         store.parse(output);
       });
 
@@ -115,11 +118,10 @@ describe('Store', () => {
 
     describe('with Model data', () => {
       beforeEach(() => {
-        models = [List, ListItem];
         state = { list: list1, otherList: list2 };
-        store = new Store({ models, state });
+        store = new Store(state);
         output = store.stringify();
-        store = new Store({ models });
+        store = new Store();
         Model.baseId = 1;
         store.parse(output);
       });
