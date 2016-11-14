@@ -1,4 +1,5 @@
-import React      from 'react';
+import React                from 'react';
+import hoistNonReactStatics from 'hoist-non-react-statics';
 
 
 const PUBLISHABLE_FUNCTION_NAMES = [
@@ -14,7 +15,7 @@ export default function subscribe({ component }) {
   // WRAPPER COMPONENT
   //===================
 
-  return class Subscriber extends React.Component {
+  class Subscriber extends React.Component {
 
     constructor(props) {
       super(props);
@@ -68,6 +69,13 @@ export default function subscribe({ component }) {
       publishable.unsubscribe(this.forceUpdate);
     }
 
-  };
+  }
+
+
+  //=====================
+  // PASS STATIC METHODS
+  //=====================
+
+  return hoistNonReactStatics(Subscriber, component);
 
 };

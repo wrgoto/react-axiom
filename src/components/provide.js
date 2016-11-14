@@ -1,4 +1,5 @@
-import React from 'react';
+import React                from 'react';
+import hoistNonReactStatics from 'hoist-non-react-statics';
 
 
 export default function provide({ component, childContextTypes }) {
@@ -37,5 +38,10 @@ export default function provide({ component, childContextTypes }) {
 
   Provider.childContextTypes = childContextTypes;
 
-  return Provider
+
+  //=====================
+  // PASS STATIC METHODS
+  //=====================
+
+  return hoistNonReactStatics(Provider, component);
 };

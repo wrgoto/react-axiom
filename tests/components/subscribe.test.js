@@ -20,6 +20,10 @@ const publishable = {
 
 class TestComponent extends React.Component {
 
+  static test() {
+    return null;
+  }
+
   render() {
     return null;
   }
@@ -46,6 +50,13 @@ describe('Subscriber', () => {
     component = TestUtils.renderIntoDocument(
       <TestSubscriber name="test" publishable={publishable} />
     );
+  });
+
+  describe('statics', () => {
+    it('should be passed from the original component', () => {
+      expect(TestSubscriber.test).toBeDefined();
+      expect(TestSubscriber.test).toBe(TestComponent.test);
+    });
   });
 
   describe('componentWillMount', () => {

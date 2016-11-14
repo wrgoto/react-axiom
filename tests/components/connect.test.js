@@ -9,6 +9,10 @@ import connect    from '../../src/components/connect';
 
 class TestComponent extends React.Component {
 
+  static test() {
+    return null;
+  }
+
   render() {
     return null;
   }
@@ -60,6 +64,13 @@ describe('Connector', () => {
     component = TestUtils.renderIntoDocument(
       <ContextComponent />
     );
+  });
+
+  describe('statics', () => {
+    it('should be passed from the original component', () => {
+      expect(TestConnector.test).toBeDefined();
+      expect(TestConnector.test).toBe(TestComponent.test);
+    });
   });
 
   describe('render', () => {

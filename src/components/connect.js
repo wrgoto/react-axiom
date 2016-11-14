@@ -1,4 +1,5 @@
-import React from 'react';
+import React                from 'react';
+import hoistNonReactStatics from 'hoist-non-react-statics';
 
 
 export default function connect({ component, contextTypes }) {
@@ -37,5 +38,10 @@ export default function connect({ component, contextTypes }) {
 
   Connector.contextTypes = contextTypes;
 
-  return Connector;
+
+  //=====================
+  // PASS STATIC METHODS
+  //=====================
+
+  return hoistNonReactStatics(Connector, component);
 };
