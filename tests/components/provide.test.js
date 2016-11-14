@@ -34,6 +34,10 @@ ChildContextComponent.contextTypes = {
 
 class TestComponent extends React.Component {
 
+  static test() {
+    return null;
+  }
+
   render() {
     return (
       <div className="TestComponent">
@@ -67,6 +71,13 @@ describe('Provider', () => {
         {'test children'}
       </TestProvider>
     );
+  });
+
+  describe('statics', () => {
+    it('should be passed from the original component', () => {
+      expect(TestProvider.test).toBeDefined();
+      expect(TestProvider.test).toBe(TestComponent.test);
+    });
   });
 
   describe('render', () => {

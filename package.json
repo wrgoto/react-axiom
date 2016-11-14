@@ -13,6 +13,7 @@
   "author": "Will Goto <will.r.goto@gmail.com>",
   "license": "ISC",
   "dependencies": {
+    "hoist-non-react-statics": "1.2.0",
     "lodash": "4.16.4",
     "react": "15.3.2"
   },
