@@ -9,7 +9,7 @@ const PUBLISHABLE_FUNCTION_NAMES = [
 ];
 
 
-export default function subscribe({ component }) {
+export default function subscribe(Component) {
 
   //===================
   // WRAPPER COMPONENT
@@ -21,7 +21,7 @@ export default function subscribe({ component }) {
     // CLASS PROPERTIES
     //==================
 
-    static WrappedComponent = component;
+    static WrappedComponent = Component;
 
 
     //=============
@@ -49,7 +49,7 @@ export default function subscribe({ component }) {
     }
 
     render() {
-      return React.createElement(component, this.props);
+      return React.createElement(Component, this.props);
     }
 
 
@@ -87,6 +87,6 @@ export default function subscribe({ component }) {
   // PASS STATIC METHODS
   //=====================
 
-  return hoistNonReactStatics(Subscriber, component);
+  return hoistNonReactStatics(Subscriber, Component);
 
 };
