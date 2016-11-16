@@ -30,9 +30,7 @@ class TestComponent extends React.Component {
 
 }
 
-const TestSubscriber = subscribe({
-  component: TestComponent
-});
+const TestSubscriber = subscribe(TestComponent);
 
 
 //==================
