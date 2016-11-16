@@ -2,6 +2,9 @@ import React                from 'react';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 
 
+// This feature is still experimental, do not use.
+
+
 export default function connect({ component, contextTypes }) {
 
   //===================

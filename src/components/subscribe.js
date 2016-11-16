@@ -17,6 +17,17 @@ export default function subscribe({ component }) {
 
   class Subscriber extends React.Component {
 
+    //==================
+    // CLASS PROPERTIES
+    //==================
+
+    static WrappedComponent = component;
+
+
+    //=============
+    // CONSTRUCTOR
+    //=============
+
     constructor(props) {
       super(props);
       this.forceUpdate = this.forceUpdate.bind(this);

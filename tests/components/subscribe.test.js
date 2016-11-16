@@ -52,7 +52,13 @@ describe('Subscriber', () => {
     );
   });
 
-  describe('statics', () => {
+  describe('static properties', () => {
+    it('should contain a reference to the wrapped component', () => {
+      expect(TestSubscriber.WrappedComponent).toBe(TestComponent);
+    });
+  });
+
+  describe('static methods', () => {
     it('should be passed from the original component', () => {
       expect(TestSubscriber.test).toBeDefined();
       expect(TestSubscriber.test).toBe(TestComponent.test);
