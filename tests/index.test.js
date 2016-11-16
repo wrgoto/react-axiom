@@ -1,6 +1,4 @@
 import ReactAxiom, {
-  connect,
-  provide,
   subscribe,
   Model,
   Publisher,
@@ -12,14 +10,6 @@ describe('ReactAxiom', () => {
   describe('default', () => {
     it('should be defined', () => {
       expect(ReactAxiom).toBeDefined();
-    });
-
-    it('should respond to connect', () => {
-      expect(ReactAxiom.connect).toBeDefined();
-    });
-
-    it('should respond to provide', () => {
-      expect(ReactAxiom.provide).toBeDefined();
     });
 
     it('should respond to subscribe', () => {
@@ -36,18 +26,6 @@ describe('ReactAxiom', () => {
 
     it('should respond to Store', () => {
       expect(ReactAxiom.Store).toBeDefined();
-    });
-  });
-
-  describe('connect', () => {
-    it('should be defined', () => {
-      expect(connect).toBeDefined();
-    });
-  });
-
-  describe('provide', () => {
-    it('should be defined', () => {
-      expect(provide).toBeDefined();
     });
   });
 
