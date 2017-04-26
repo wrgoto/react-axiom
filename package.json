@@ -1,11 +1,11 @@
 {
   "name": "react-axiom",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "React Axiom is a way to use models with React.",
   "repository": "https://github.com/wgoto/react-axiom",
   "main": "lib/react-axiom.js",
   "engines": {
-    "node": "6.9.1"
+    "node": ">=4.0.0"
   },
   "scripts": {
     "build": "webpack --config webpack/config.js",
