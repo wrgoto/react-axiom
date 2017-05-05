@@ -59,6 +59,10 @@ export default class Model extends Publisher {
       }
 
       this.constructor.prototype[hasKey] = this[hasKey] || function () {
+          if (Array.isArray(this.state[key])) {
+            return !!this.state[key].length;
+          }
+
           return !!this.state[key];
         };
 
