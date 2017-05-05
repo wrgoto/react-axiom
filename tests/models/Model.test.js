@@ -6,6 +6,7 @@ import Model from '../../src/models/Model';
 //================
 
 const obj = { id: '1' };
+const arr = [];
 
 
 //============
@@ -13,8 +14,8 @@ const obj = { id: '1' };
 //============
 
 class Test extends Model {
-  constructor({ id, test = true, obj = {} }) {
-    super({ id, test, obj });
+  constructor({ id, test = true, obj = {}, arr }) {
+    super({ id, test, obj, arr });
   }
 }
 
@@ -40,7 +41,7 @@ describe('Model', () => {
   let modelWithDefaultState;
 
   beforeEach(() => {
-    model = new Test({ id: '1', obj });
+    model = new Test({ id: '1', obj, arr });
     modelWithoutState = new TestWithoutState();
     modelWithDefaultState = new TestWithDefaultState();
   });
@@ -92,6 +93,12 @@ describe('Model', () => {
 
       it('should create a has function', () => {
         expect(model.hasId()).toBe(true);
+      });
+    });
+
+    describe('when state is an array', () => {
+      it('should create a has function', () => {
+        expect(model.hasArr()).toBe(false);
       });
     });
 
