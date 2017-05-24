@@ -44,6 +44,20 @@ export default function subscribe(Component) {
       this._getPublishables().forEach(this._subscribe);
     }
 
+    componentWillReceiveProps(nextProps) {
+      Object.keys(nextProps).forEach(key => {
+        if (nextProps[key] === this.props[key]) return;
+
+        if (this._isPublishable(nextProps[key])) {
+          this._subscribe(nextProps[key]);
+        }
+
+        if (this._isPublishable(this.props[key])) {
+          this._unsubscribe(this.props[key]);
+        }
+      });
+    }
+
     componentWillUnmount() {
       this._getPublishables().forEach(this._unsubscribe);
     }

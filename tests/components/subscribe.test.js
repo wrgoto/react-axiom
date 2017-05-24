@@ -13,6 +13,12 @@ const publishable = {
   publish: () => {}
 };
 
+const nextPublishable = {
+  subscribe: () => {},
+  unsubscribe: () => {},
+  publish: () => {}
+};
+
 
 //================
 // TEST COMPONENT
@@ -45,6 +51,10 @@ describe('Subscriber', () => {
     spyOn(publishable, 'unsubscribe');
     spyOn(publishable, 'publish');
 
+    spyOn(nextPublishable, 'subscribe');
+    spyOn(nextPublishable, 'unsubscribe');
+    spyOn(nextPublishable, 'publish');
+
     component = TestUtils.renderIntoDocument(
       <TestSubscriber name="test" publishable={publishable} />
     );
@@ -66,6 +76,43 @@ describe('Subscriber', () => {
   describe('componentWillMount', () => {
     it('should subscribe forceUpdate to the publishable', () => {
       expect(publishable.subscribe).toBeCalledWith(component.forceUpdate);
+    });
+  });
+
+  describe('componentWillReceiveProps', () => {
+    describe('when next prop is not a publishable', () => {
+      beforeEach(() => {
+        component.componentWillReceiveProps({ name: 'test', publishable: {} })
+      });
+
+      it('should unsubscribe the current publishable', () => {
+        expect(publishable.unsubscribe).toBeCalledWith(component.forceUpdate);
+      });
+    });
+
+    describe('when next prop is a publishable', () => {
+      beforeEach(() => {
+        component.componentWillReceiveProps({ name: 'test', publishable: nextPublishable })
+      });
+
+      it('should subscribe the next publishable', () => {
+        expect(nextPublishable.subscribe).toBeCalledWith(component.forceUpdate);
+      });
+
+      it('should unsubscribe the current publishable', () => {
+        expect(publishable.unsubscribe).toBeCalledWith(component.forceUpdate);
+      });
+    });
+
+    describe('when current prop is not a publishable and next prop is a publishable', () => {
+      beforeEach(() => {
+        component = TestUtils.renderIntoDocument(<TestSubscriber name="test" publishable={{}} />);
+        component.componentWillReceiveProps({ name: 'test', publishable: nextPublishable })
+      });
+
+      it('should subscribe the next publishable', () => {
+        expect(nextPublishable.subscribe).toBeCalledWith(component.forceUpdate);
+      });
     });
   });
 
