@@ -82,7 +82,7 @@ export default function subscribe(Component) {
 
     _isPublishable(prop) {
       return PUBLISHABLE_FUNCTION_NAMES.every(name => {
-        return prop[name] && prop[name] instanceof Function;
+        return prop && prop[name] && prop[name] instanceof Function;
       });
     }
 

@@ -56,7 +56,7 @@ describe('Subscriber', () => {
     spyOn(nextPublishable, 'publish');
 
     component = TestUtils.renderIntoDocument(
-      <TestSubscriber name="test" publishable={publishable} />
+      <TestSubscriber name="test" publishable={publishable} nullProp={null} />
     );
   });
 
