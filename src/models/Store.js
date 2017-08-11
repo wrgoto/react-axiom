@@ -1,4 +1,5 @@
 import isPlainObject  from 'lodash/isPlainObject';
+import pick           from 'lodash/pick';
 import Model          from './Model';
 
 
@@ -29,9 +30,10 @@ export default class Store extends Model {
   // INTERFACING METHODS
   //=====================
 
-  stringify() {
+  stringify(...keys) {
     const models = this._createModelsHash();
-    const state = this._toSerialState(this.state, models);
+    const _state = keys.length ? pick(this.state, keys) : this.state;
+    const state = this._toSerialState(_state, models);
     return JSON.stringify({ state, models });
   }
 
@@ -39,6 +41,12 @@ export default class Store extends Model {
     const { state, models } = JSON.parse(json);
     const newModels = this._createModelsHash();
     this.state = this._fromSerialState(state, models, newModels);
+  }
+
+  parseMerge(json) {
+    const { state, models } = JSON.parse(json);
+    const newModels = this._createModelsHash();
+    Object.assign(this.state, this._fromSerialState(state, models, newModels));
   }
 
 

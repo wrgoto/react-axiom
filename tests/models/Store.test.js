@@ -95,6 +95,7 @@ list2.setOtherList(list1);
 describe('Store', () => {
   let store;
   let state;
+  let subState;
   let output;
 
   beforeEach(() => {
@@ -217,6 +218,35 @@ describe('Store', () => {
           });
         });
       });
+    });
+  });
+
+  describe('parseMerge', () => {
+    beforeEach(() => {
+      subState = { number, float, bool, array, object };
+      state = { string, number, float, bool, array, object };
+      store = new Store(subState);
+      output = store.stringify();
+      store = new Store({ string, number: {} });
+      store.parseMerge(output);
+    });
+
+    it('should set the correct store state', () => {
+      expect(store.state).toEqual(state);
+    });
+  });
+
+  describe('stringify', () => {
+    beforeEach(() => {
+      state = { string, number, float, bool, array, object };
+      store = new Store(state);
+      output = store.stringify('number');
+      store = new Store();
+      store.parse(output);
+    });
+
+    it('should set the correct store state', () => {
+      expect(store.state).toEqual({ number });
     });
   });
 });
