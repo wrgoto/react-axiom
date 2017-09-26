@@ -17,13 +17,6 @@ export default function subscribe(Component) {
 
   class Subscriber extends React.Component {
 
-    //==================
-    // CLASS PROPERTIES
-    //==================
-
-    static WrappedComponent = Component;
-
-
     //=============
     // CONSTRUCTOR
     //=============
@@ -95,6 +88,12 @@ export default function subscribe(Component) {
     }
 
   }
+
+  //==================
+  // CLASS PROPERTIES
+  //==================
+
+  Subscriber.WrappedComponent = Component;
 
 
   //=====================
