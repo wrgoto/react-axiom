@@ -3,7 +3,7 @@ import ReactAxiom, {
   Model,
   Publisher,
   Store
-} from '../src/index';
+} from '../index';
 
 
 describe('ReactAxiom', () => {

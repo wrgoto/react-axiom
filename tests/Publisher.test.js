@@ -1,4 +1,4 @@
-import Publisher from '../../src/models/Publisher';
+import Publisher from '../Publisher';
 
 
 describe('Publisher', () => {

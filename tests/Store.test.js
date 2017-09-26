@@ -1,5 +1,5 @@
-import Model from '../../src/models/Model';
-import Store from '../../src/models/Store';
+import Model from '../Model';
+import Store from '../Store';
 
 
 //================

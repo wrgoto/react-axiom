@@ -1,4 +1,4 @@
-import Model from '../../src/models/Model';
+import Model from '../Model';
 
 
 //================
