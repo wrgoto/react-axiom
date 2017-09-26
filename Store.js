@@ -3,7 +3,15 @@ import pick           from 'lodash/pick';
 import Model          from './Model';
 
 
-class Store extends Model {
+export default class Store extends Model {
+
+  //==================
+  // CLASS PROPERTIES
+  //==================
+
+  static models = [];
+  static modelsHash = {};
+
 
   //===============
   // CLASS METHODS
@@ -126,14 +134,3 @@ class Store extends Model {
   }
 
 }
-
-
-//==================
-// CLASS PROPERTIES
-//==================
-
-Store.models = [];
-Store.modelsHash = {};
-
-
-export default Store;
