@@ -1,7 +1,14 @@
 import Publisher from './Publisher';
 
 
-class Model extends Publisher {
+export default class Model extends Publisher {
+
+  //==================
+  // CLASS PROPERTIES
+  //==================
+
+  static baseId = 1;
+
 
   //===============
   // CLASS METHODS
@@ -106,14 +113,4 @@ class Model extends Publisher {
     return { prev, next, diff };
   }
 
-}
-
-
-//==================
-// CLASS PROPERTIES
-//==================
-
-Model.baseId = 1;
-
-
-export default Model;
+};
