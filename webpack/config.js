@@ -11,7 +11,7 @@ module.exports = {
       loader: 'babel-loader'
     }]
   },
-  externals: [
-    'react'
-  ]
+  externals: {
+    react: 'react'
+  }
 };

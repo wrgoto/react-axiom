@@ -19,7 +19,7 @@ module.exports = {
       compress: { warnings: false }
     })
   ],
-  externals: [
-    'react'
-  ]
+  externals: {
+    react: 'react'
+  }
 };
