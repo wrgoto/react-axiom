@@ -1,11 +1,8 @@
 module.exports = {
-  entry: './src/index.js',
+  entry: './index.js',
   output: {
     path: 'lib',
-    filename: 'react-axiom.js',
-    library: 'react-axiom',
-    libraryTarget: 'umd',
-    umdNamedDefine: true
+    filename: 'react-axiom.js'
   },
   module: {
     loaders: [{
@@ -14,7 +11,7 @@ module.exports = {
       loader: 'babel-loader'
     }]
   },
-  externals: [
-    'react'
-  ]
+  externals: {
+    react: 'react'
+  }
 };

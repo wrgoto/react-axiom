@@ -1,6 +1,6 @@
 import React      from 'react';
-import TestUtils  from 'react-addons-test-utils';
-import subscribe  from '../../src/components/subscribe';
+import TestUtils  from 'react-dom/test-utils';
+import subscribe  from '../subscribe';
 
 
 //================
