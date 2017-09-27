@@ -4,8 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: './src/index.js',
   output: {
-    path: 'lib',
-    filename: 'react-axiom.min.js',
+    filename: './lib/react-axiom.min.js',
     library: 'react-axiom',
     libraryTarget: 'umd',
     umdNamedDefine: true
