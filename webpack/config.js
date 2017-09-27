@@ -1,3 +1,6 @@
+const webpack = require('webpack');
+
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -13,7 +16,14 @@ module.exports = {
       loader: 'babel-loader'
     }]
   },
-  externals: [
-    'react'
-  ]
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      comments: false,
+      compress: { warnings: false },
+      mangle: { keep_fnames: true }
+    })
+  ],
+  externals: {
+    react: 'react'
+  }
 };
