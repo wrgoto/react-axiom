@@ -3,7 +3,7 @@
     "transform-class-properties"
   ],
   "presets": [
-    "env",
+    "es2015",
     "react"
   ]
 }

@@ -2,10 +2,13 @@ const webpack = require('webpack');
 
 
 module.exports = {
-  entry: './index.js',
+  entry: './src/index.js',
   output: {
     path: 'lib',
-    filename: 'react-axiom.min.js'
+    filename: 'react-axiom.min.js',
+    library: 'react-axiom',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
   module: {
     loaders: [{
@@ -19,7 +22,7 @@ module.exports = {
       compress: { warnings: false }
     })
   ],
-  externals: {
-    react: 'react'
-  }
+  externals: [
+    'react'
+  ]
 };
