@@ -6,6 +6,12 @@ import Model          from './Model';
 
 export default class Store extends Model {
 
+  constructor(state) {
+    super(state);
+    this._createEntityHelpers();
+  }
+
+
   //==================
   // CLASS PROPERTIES
   //==================
@@ -64,6 +70,21 @@ export default class Store extends Model {
   //==================
   // INTERNAL METHODS
   //==================
+
+  _createEntityHelpers() {
+    Object.keys(this.state.entityDefinitions).forEach(key => {
+      const cappedKey = key[0].toUpperCase() + key.substring(1);
+      const findKey = `find${cappedKey}`;
+
+      if (isPlainObject(this.state[key])) {
+        this.constructor.prototype[findKey] = this[findKey] || function (id) {
+          return id instanceof Array
+            ? id.map(_id => this.state[key][_id])
+            : this.state[key][id];
+        };
+      }
+    });
+  }
 
   _createModelsHash() {
     return mapValues(Store.modelsHash, () => {

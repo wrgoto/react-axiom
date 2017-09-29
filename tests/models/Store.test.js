@@ -297,6 +297,45 @@ describe('Store', () => {
 
     it('should create the first list', () => {
       expect(store.getLists()[1].getName()).toBe('new list');
-    })
-  })
+    });
+  });
+
+  describe('createEntityHelpers', () => {
+    beforeEach(() => {
+      state = {
+        entityDefinitions: {
+          listItems: ListItem,
+          lists: List,
+          falseEntity: {}
+        },
+        listItems: {
+          1: listItem1,
+          2: listItem2
+        },
+        lists: {
+          1: list1,
+        }
+      };
+
+      store = new Store(state);
+    });
+
+    describe('when multiple ids are provided', () => {
+      it('should return an array of items', () => {
+        expect(store.findListItems([1, 2])).toEqual([listItem1, listItem2]);
+      });
+    });
+
+    describe('when one id is provided', () => {
+      it('should return the item', () => {
+        expect(store.findLists(1)).toBe(list1);
+      });
+    });
+
+    describe('when a false entity is not correctly stored', () => {
+      it('should not define a find function', () => {
+        expect(store.findFalseEntity).not.toBeDefined();
+      });
+    });
+  });
 });
