@@ -1,9 +1,16 @@
 import isPlainObject  from 'lodash/isPlainObject';
+import mapValues      from 'lodash/mapValues';
 import pick           from 'lodash/pick';
 import Model          from './Model';
 
 
 export default class Store extends Model {
+
+  constructor(state) {
+    super(state);
+    this._createEntityHelpers();
+  }
+
 
   //==================
   // CLASS PROPERTIES
@@ -23,6 +30,12 @@ export default class Store extends Model {
       hash[model.name] = model;
       return hash;
     }, {});
+  }
+
+  static defaultState() {
+    return {
+      entityDefinitions: {}
+    };
   }
 
 
@@ -49,16 +62,34 @@ export default class Store extends Model {
     Object.assign(this.state, this._fromSerialState(state, models, newModels));
   }
 
+  addEntities(entities) {
+    this.setState(this._mergeEntities(entities));
+  }
+
 
   //==================
   // INTERNAL METHODS
   //==================
 
+  _createEntityHelpers() {
+    Object.keys(this.state.entityDefinitions).forEach(key => {
+      const cappedKey = key[0].toUpperCase() + key.substring(1);
+      const findKey = `find${cappedKey}`;
+
+      if (isPlainObject(this.state[key])) {
+        this.constructor.prototype[findKey] = this[findKey] || function (id) {
+          return id instanceof Array
+            ? id.map(_id => this.state[key][_id])
+            : this.state[key][id];
+        };
+      }
+    });
+  }
+
   _createModelsHash() {
-    return Object.keys(Store.modelsHash).reduce((hash, key) => {
-      hash[key] = {};
-      return hash;
-    }, {});
+    return mapValues(Store.modelsHash, () => {
+      return {};
+    });
   }
 
   _toSerial(data, store) {
@@ -78,10 +109,9 @@ export default class Store extends Model {
   }
 
   _toSerialState(state, store) {
-    return Object.keys(state).reduce((serializableState, key) => {
-      serializableState[key] = this._toSerial(state[key], store);
-      return serializableState;
-    }, {});
+    return mapValues(state, (value, key) =>
+      this._toSerial(state[key], store)
+    );
   }
 
   _toSerialModel(model, store) {
@@ -112,10 +142,9 @@ export default class Store extends Model {
   }
 
   _fromSerialState(state, models, newModels) {
-    return Object.keys(state).reduce((finalState, key) => {
-      finalState[key] = this._fromSerial(state[key], models, newModels);
-      return finalState;
-    }, {});
+    return mapValues(state, (value, key) =>
+      this._fromSerial(value, models, newModels)
+    );
   }
 
   _fromSerialModel(model, models, newModels) {
@@ -131,6 +160,38 @@ export default class Store extends Model {
     );
 
     return newModelHash[_id] = newModel;
+  }
+
+  _mergeEntities(entities) {
+    return mapValues(entities, (entity, key) =>
+      this._mergeEntity(entity, key)
+    );
+  }
+
+  _mergeEntity(entity, key) {
+    return Object.assign({}, this.state[key], this._mergeInstances(entity, key));
+  }
+
+  _mergeInstances(entity, key) {
+    return mapValues(entity, (instance, id) =>
+      this._instanceExists(key, id)
+        ? this._updateExistingInstance(key, id, instance)
+        : this._createNewInstance(key, instance)
+    );
+  }
+
+  _instanceExists(key, id) {
+    return !!this.state[key][id];
+  }
+
+  _updateExistingInstance(key, id, instance) {
+    this.state[key][id].setState(instance);
+    return this.state[key][id];
+  }
+
+  _createNewInstance(key, instance) {
+    const Model = this.getEntityDefinitions()[key];
+    return new Model(Object.assign({}, instance, { store: this }));
   }
 
 }

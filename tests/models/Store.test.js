@@ -73,7 +73,7 @@ class ListItem extends Model {
 }
 
 const listItem1 = new ListItem({ id: '1' });
-const listItem2 = new ListItem({ id: '2' });
+const listItem2 = new ListItem({ id: '2', name: 'old name' });
 const listItem3 = new ListItem({ id: '3' });
 const listItem4 = new ListItem({ id: '4' });
 
@@ -86,6 +86,8 @@ const list2 = new List({ id: '2' });
 
 list1.setListItems([listItem1, listItem2, listItem3, listItem4]);
 list2.setOtherList(list1);
+
+const entityDefinitions = {};
 
 
 //=============
@@ -105,7 +107,7 @@ describe('Store', () => {
   describe('parse', () => {
     describe('with non-Model data', () => {
       beforeEach(() => {
-        state = { string, number, float, bool, array, object };
+        state = { string, number, float, bool, array, object, entityDefinitions };
         store = new Store(state);
         output = store.stringify();
         store = new Store();
@@ -224,7 +226,7 @@ describe('Store', () => {
   describe('parseMerge', () => {
     beforeEach(() => {
       subState = { number, float, bool, array, object };
-      state = { string, number, float, bool, array, object };
+      state = { string, number, float, bool, array, object, entityDefinitions };
       store = new Store(subState);
       output = store.stringify();
       store = new Store({ string, number: {} });
@@ -247,6 +249,93 @@ describe('Store', () => {
 
     it('should set the correct store state', () => {
       expect(store.state).toEqual({ number });
+    });
+  });
+
+  describe('addEntities', () => {
+    beforeEach(() => {
+      state = {
+        entityDefinitions: {
+          listItems: ListItem,
+          lists: List
+        },
+        listItems: {
+          1: listItem1,
+          2: listItem2
+        },
+        lists: {}
+      };
+
+      store = new Store(state);
+
+      store.addEntities({
+        listItems: {
+          2: { name: 'updated name' },
+          3: { id: 3, name: 'new name' }
+        },
+        lists: {
+          1: { id: 1, name: 'new list' }
+        }
+      });
+    });
+
+    it('should not replace the first list item', () => {
+      expect(store.getListItems()[1]).toBe(listItem1);
+    });
+
+    it('should not replace the second list item', () => {
+      expect(store.getListItems()[2]).toBe(listItem2);
+    });
+
+    it('should update the second list item', () => {
+      expect(store.getListItems()[2].getName()).toBe('updated name');
+    });
+
+    it('should create the third list item', () => {
+      expect(store.getListItems()[3].getName()).toBe('new name');
+    });
+
+    it('should create the first list', () => {
+      expect(store.getLists()[1].getName()).toBe('new list');
+    });
+  });
+
+  describe('createEntityHelpers', () => {
+    beforeEach(() => {
+      state = {
+        entityDefinitions: {
+          listItems: ListItem,
+          lists: List,
+          falseEntity: {}
+        },
+        listItems: {
+          1: listItem1,
+          2: listItem2
+        },
+        lists: {
+          1: list1,
+        }
+      };
+
+      store = new Store(state);
+    });
+
+    describe('when multiple ids are provided', () => {
+      it('should return an array of items', () => {
+        expect(store.findListItems([1, 2])).toEqual([listItem1, listItem2]);
+      });
+    });
+
+    describe('when one id is provided', () => {
+      it('should return the item', () => {
+        expect(store.findLists(1)).toBe(list1);
+      });
+    });
+
+    describe('when a false entity is not correctly stored', () => {
+      it('should not define a find function', () => {
+        expect(store.findFalseEntity).not.toBeDefined();
+      });
     });
   });
 });
