@@ -101,6 +101,13 @@ export default function subscribe(Component) {
   // PASS STATIC METHODS
   //=====================
 
+  Subscriber.displayName = `Subscriber(${Component.displayName || Component.name || 'Component'})`;
+
+
+  //=====================
+  // PASS STATIC METHODS
+  //=====================
+
   return hoistNonReactStatics(Subscriber, Component);
 
 };
