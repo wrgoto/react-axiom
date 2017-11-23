@@ -37,6 +37,7 @@ class TestComponent extends React.Component {
 }
 
 const TestSubscriber = subscribe(TestComponent);
+const PureSubscriber = subscribe(() => {});
 
 
 //==================
@@ -58,6 +59,16 @@ describe('Subscriber', () => {
     component = TestUtils.renderIntoDocument(
       <TestSubscriber name="test" publishable={publishable} nullProp={null} />
     );
+  });
+
+  describe('displayName', () => {
+    it('should contain the correct wrapped name for the wrapped component', () => {
+      expect(TestSubscriber.displayName).toBe('Subscriber(TestComponent)');
+    });
+
+    it('should contain the correct wrapped name for a pure component', () => {
+      expect(PureSubscriber.displayName).toBe('Subscriber(Component)');
+    });
   });
 
   describe('static properties', () => {
