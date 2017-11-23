@@ -34,7 +34,8 @@ export default class Store extends Model {
 
   static defaultState() {
     return {
-      entityDefinitions: {}
+      entityDefinitions: {},
+      updateQueue: []
     };
   }
 
@@ -64,6 +65,8 @@ export default class Store extends Model {
 
   addEntities(entities) {
     this.setState(this._mergeEntities(entities));
+    this._publishUpdateQueue();
+    this._clearUpdateQueue();
   }
 
 
@@ -185,8 +188,22 @@ export default class Store extends Model {
   }
 
   _updateExistingInstance(key, id, instance) {
-    this.state[key][id].setState(instance);
-    return this.state[key][id];
+    const existingInstance = this.state[key][id];
+    Object.assign(existingInstance.state, instance);
+    this._addToUpdateQueue(existingInstance)
+    return existingInstance;
+  }
+
+  _addToUpdateQueue(model) {
+    this.getUpdateQueue().push(model);
+  }
+
+  _clearUpdateQueue() {
+    this.setUpdateQueue([]);
+  }
+
+  _publishUpdateQueue() {
+    this.getUpdateQueue().forEach(model => model.publish());
   }
 
   _createNewInstance(key, instance) {
