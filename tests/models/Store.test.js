@@ -88,6 +88,7 @@ list1.setListItems([listItem1, listItem2, listItem3, listItem4]);
 list2.setOtherList(list1);
 
 const entityDefinitions = {};
+const updateQueue = [];
 
 
 //=============
@@ -107,7 +108,7 @@ describe('Store', () => {
   describe('parse', () => {
     describe('with non-Model data', () => {
       beforeEach(() => {
-        state = { string, number, float, bool, array, object, entityDefinitions };
+        state = { string, number, float, bool, array, object, entityDefinitions, updateQueue };
         store = new Store(state);
         output = store.stringify();
         store = new Store();
@@ -226,7 +227,7 @@ describe('Store', () => {
   describe('parseMerge', () => {
     beforeEach(() => {
       subState = { number, float, bool, array, object };
-      state = { string, number, float, bool, array, object, entityDefinitions };
+      state = { string, number, float, bool, array, object, entityDefinitions, updateQueue };
       store = new Store(subState);
       output = store.stringify();
       store = new Store({ string, number: {} });
