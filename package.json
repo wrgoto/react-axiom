@@ -1,15 +1,14 @@
 {
   "name": "react-axiom",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "React Axiom is a way to use models with React.",
   "repository": "https://github.com/wgoto/react-axiom",
-  "main": "lib/react-axiom.js",
-  "module": "src/index.js",
+  "main": "lib/index.js",
   "engines": {
     "node": ">=4.0.0"
   },
   "scripts": {
-    "build": "webpack --config webpack/config.js",
+    "build": "BABEL_ENV=cjs babel src --out-dir lib --copy-files",
     "codecov": "codecov",
     "test": "jest"
   },
@@ -32,8 +31,7 @@
     "codecov": "^2.3.0",
     "jest": "^21.2.0",
     "react": "^15.6.2",
-    "react-dom": "^15.6.2",
-    "webpack": "^3.6.0"
+    "react-dom": "^15.6.2"
   },
   "jest": {
     "collectCoverage": true,
