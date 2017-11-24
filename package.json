@@ -1,9 +1,10 @@
 {
   "name": "react-axiom",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "React Axiom is a way to use models with React.",
   "repository": "https://github.com/wgoto/react-axiom",
   "main": "lib/react-axiom.js",
+  "module": "src/index.js",
   "engines": {
     "node": ">=4.0.0"
   },
@@ -16,8 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "hoist-non-react-statics": "^2.3.1",
-    "lodash": "^4.17.4",
-    "react": "^15.6.2"
+    "lodash": "^4.17.4"
+  },
+  "peerDependencies": {
+    "react": "^15.0.0-0 || ^16.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -29,6 +32,7 @@
     "babel-preset-react": "^6.24.1",
     "codecov": "^2.3.0",
     "jest": "^21.2.0",
+    "react": "^15.6.2",
     "react-dom": "^15.6.2",
     "webpack": "^3.6.0"
   },
