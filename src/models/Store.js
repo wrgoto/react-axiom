@@ -20,8 +20,7 @@ class Store extends Model {
 
   static defaultState() {
     return {
-      entityDefinitions: {},
-      updateQueue: []
+      entityDefinitions: {}
     };
   }
 
@@ -191,15 +190,15 @@ class Store extends Model {
   }
 
   _addToUpdateQueue(model) {
-    this.getUpdateQueue().push(model);
+    Store.updateQueue.push(model);
   }
 
   _clearUpdateQueue() {
-    this.setUpdateQueue([]);
+    Store.updateQueue.length = 0;
   }
 
   _publishUpdateQueue() {
-    this.getUpdateQueue().forEach(model => model.publish());
+    Store.updateQueue.forEach(model => model.publish());
   }
 
   _createNewInstance(key, instance) {
@@ -216,6 +215,7 @@ class Store extends Model {
 
 Store.models = [];
 Store.modelsHash = {};
+Store.updateQueue = [];
 
 
 export default Store;
