@@ -1,6 +1,6 @@
 {
   "name": "react-axiom",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "React Axiom is a way to use models with React.",
   "repository": "https://github.com/wgoto/react-axiom",
   "main": "lib/index.js",
