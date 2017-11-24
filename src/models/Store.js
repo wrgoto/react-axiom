@@ -4,21 +4,7 @@ import pick           from 'lodash/pick';
 import Model          from './Model';
 
 
-export default class Store extends Model {
-
-  constructor(state) {
-    super(state);
-    this._createEntityHelpers();
-  }
-
-
-  //==================
-  // CLASS PROPERTIES
-  //==================
-
-  static models = [];
-  static modelsHash = {};
-
+class Store extends Model {
 
   //===============
   // CLASS METHODS
@@ -37,6 +23,16 @@ export default class Store extends Model {
       entityDefinitions: {},
       updateQueue: []
     };
+  }
+
+
+  //=============
+  // CONSTRUCTOR
+  //=============
+
+  constructor(state) {
+    super(state);
+    this._createEntityHelpers();
   }
 
 
@@ -212,3 +208,14 @@ export default class Store extends Model {
   }
 
 }
+
+
+//==================
+// CLASS PROPERTIES
+//==================
+
+Store.models = [];
+Store.modelsHash = {};
+
+
+export default Store;
