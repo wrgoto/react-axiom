@@ -1,5 +1,8 @@
 import isPlainObject  from 'lodash/isPlainObject';
+import find           from 'lodash/find';
+import map            from 'lodash/map';
 import mapValues      from 'lodash/mapValues';
+import omit           from 'lodash/omit';
 import pick           from 'lodash/pick';
 import Model          from './Model';
 
@@ -9,14 +12,6 @@ class Store extends Model {
   //===============
   // CLASS METHODS
   //===============
-
-  static setModelRefs(models) {
-    Store.models = models;
-    Store.modelsHash = models.reduce((hash, model) => {
-      hash[model.name] = model;
-      return hash;
-    }, {});
-  }
 
   static defaultState() {
     return {
@@ -40,22 +35,42 @@ class Store extends Model {
   //=====================
 
   stringify(...keys) {
-    const models = this._createModelsHash();
-    const _state = keys.length ? pick(this.state, keys) : this.state;
-    const state = this._toSerialState(_state, models);
+    const models = this._createEmptyModelsHash();
+
+    // If keys are identified for a partial stringify pick them
+    // from state. Otherwise, use the entire state object with
+    // entityDefinitions omitted.
+
+    const partialState = keys.length
+      ? pick(this.state, keys)
+      : omit(this.state, 'entityDefinitions');
+
+    const state = this._toSerialState(partialState, models);
+
     return JSON.stringify({ state, models });
   }
 
   parse(json) {
     const { state, models } = JSON.parse(json);
-    const newModels = this._createModelsHash();
-    this.state = this._fromSerialState(state, models, newModels);
+    const newModels = this._createEmptyModelsHash();
+    const entityDefinitions = pick(this.state, 'entityDefinitions');
+    const restoredState = this._fromSerialState(state, models, newModels);
+
+    // Parse will completely replace the current store with the
+    // provided JSON.
+
+    this.state = Object.assign(entityDefinitions, restoredState);
   }
 
   parseMerge(json) {
     const { state, models } = JSON.parse(json);
-    const newModels = this._createModelsHash();
-    Object.assign(this.state, this._fromSerialState(state, models, newModels));
+    const newModels = this._createEmptyModelsHash();
+    const partialState = this._fromSerialState(state, models, newModels);
+
+    // ParseMerge will merge data provided by the JSON with the
+    // existing entities and data from the current store.
+
+    Object.assign(this.state, partialState);
   }
 
   addEntities(entities) {
@@ -70,54 +85,59 @@ class Store extends Model {
   //==================
 
   _createEntityHelpers() {
-    Object.keys(this.state.entityDefinitions).forEach(key => {
-      const cappedKey = key[0].toUpperCase() + key.substring(1);
-      const findKey = `find${cappedKey}`;
-
-      if (isPlainObject(this.state[key])) {
-        this.constructor.prototype[findKey] = this[findKey] || function (id) {
-          return id instanceof Array
-            ? id.map(_id => this.state[key][_id])
-            : this.state[key][id];
-        };
-      }
-    });
+    Object.keys(this.state.entityDefinitions).forEach(key => this._createEntityHelper(key));
   }
 
-  _createModelsHash() {
-    return mapValues(Store.modelsHash, () => {
-      return {};
-    });
+  _createEntityHelper(key) {
+    const cappedKey = key[0].toUpperCase() + key.substring(1);
+    const findKey = `find${cappedKey}`;
+
+    if (isPlainObject(this.state[key])) {
+      this.constructor.prototype[findKey] = this[findKey] || function (id) {
+        return id instanceof Array
+          ? id.map(_id => this.state[key][_id])
+          : this.state[key][id];
+      };
+    }
   }
 
-  _toSerial(data, store) {
+  _createEmptyModelsHash() {
+    return map(this.state.entityDefinitions).reduce((hash, Model) => {
+      hash[Model.name] = {};
+      return hash;
+    }, {});
+  }
+
+  _toSerial(data, modelsHash) {
     if (data instanceof Model) {
-      return this._toSerialModel(data, store);
+      return this._toSerialModel(data, modelsHash);
     }
 
     if (isPlainObject(data)) {
-      return this._toSerialState(data, store);
+      return this._toSerialState(data, modelsHash);
     }
 
     if (data instanceof Array) {
-      return data.map(datum => this._toSerial(datum, store));
+      return data.map(datum => this._toSerial(datum, modelsHash));
     }
 
     return data;
   }
 
-  _toSerialState(state, store) {
-    return mapValues(state, (value, key) =>
-      this._toSerial(state[key], store)
+  _toSerialState(state, modelsHash) {
+    const _state = omit(state, 'store');
+
+    return mapValues(_state, (value, key) =>
+      this._toSerial(_state[key], modelsHash)
     );
   }
 
-  _toSerialModel(model, store) {
+  _toSerialModel(model, modelsHash) {
     const { _id, constructor, state } = model;
     const _constructor = constructor.name;
 
-    if (!store[_constructor][_id]) {
-      store[_constructor][_id] = this._toSerialState(state, store);
+    if (!modelsHash[_constructor][_id]) {
+      modelsHash[_constructor][_id] = this._toSerialState(state, modelsHash);
     }
 
     return { _constructor, _id };
@@ -153,11 +173,11 @@ class Store extends Model {
       return newModelHash[_id];
     }
 
-    const newModel = new Store.modelsHash[_constructor](
-      this._fromSerial(models[_constructor][_id], models, newModels)
-    );
+    const Constructor = find(this.state.entityDefinitions, { name: _constructor });
+    const partialState = this._fromSerial(models[_constructor][_id], models, newModels);
+    const state = Object.assign({ store: this }, partialState);
 
-    return newModelHash[_id] = newModel;
+    return newModelHash[_id] = new Constructor(state);
   }
 
   _mergeEntities(entities) {
@@ -213,8 +233,6 @@ class Store extends Model {
 // CLASS PROPERTIES
 //==================
 
-Store.models = [];
-Store.modelsHash = {};
 Store.updateQueue = [];
 
 

@@ -87,7 +87,7 @@ const list2 = new List({ id: '2' });
 list1.setListItems([listItem1, listItem2, listItem3, listItem4]);
 list2.setOtherList(list1);
 
-const entityDefinitions = {};
+const entityDefinitions = { lists: List, listItems: ListItem };
 
 
 //=============
@@ -101,7 +101,7 @@ describe('Store', () => {
   let output;
 
   beforeEach(() => {
-    Store.setModelRefs([ List, ListItem ]);
+
   });
 
   describe('parse', () => {
@@ -110,7 +110,7 @@ describe('Store', () => {
         state = { string, number, float, bool, array, object, entityDefinitions };
         store = new Store(state);
         output = store.stringify();
-        store = new Store();
+        store = new Store({ entityDefinitions });
         store.parse(output);
       });
 
@@ -121,10 +121,10 @@ describe('Store', () => {
 
     describe('with Model data', () => {
       beforeEach(() => {
-        state = { list: list1, otherList: list2 };
+        state = { list: list1, otherList: list2, entityDefinitions };
         store = new Store(state);
         output = store.stringify();
-        store = new Store();
+        store = new Store({ entityDefinitions });
         Model.baseId = 1;
         store.parse(output);
       });
@@ -229,7 +229,7 @@ describe('Store', () => {
       state = { string, number, float, bool, array, object, entityDefinitions };
       store = new Store(subState);
       output = store.stringify();
-      store = new Store({ string, number: {} });
+      store = new Store({ string, number: {}, entityDefinitions });
       store.parseMerge(output);
     });
 
@@ -240,25 +240,22 @@ describe('Store', () => {
 
   describe('stringify', () => {
     beforeEach(() => {
-      state = { string, number, float, bool, array, object };
+      state = { string, number, float, bool, array, object, entityDefinitions };
       store = new Store(state);
       output = store.stringify('number');
-      store = new Store();
+      store = new Store({ entityDefinitions });
       store.parse(output);
     });
 
     it('should set the correct store state', () => {
-      expect(store.state).toEqual({ number });
+      expect(store.state).toEqual({ number, entityDefinitions });
     });
   });
 
   describe('addEntities', () => {
     beforeEach(() => {
       state = {
-        entityDefinitions: {
-          listItems: ListItem,
-          lists: List
-        },
+        entityDefinitions,
         listItems: {
           1: listItem1,
           2: listItem2
