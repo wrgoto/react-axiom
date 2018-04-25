@@ -1,5 +1,6 @@
 import isPlainObject  from 'lodash/isPlainObject';
 import mapValues      from 'lodash/mapValues';
+import omit           from 'lodash/omit';
 import pick           from 'lodash/pick';
 import Model          from './Model';
 
@@ -85,9 +86,10 @@ class Store extends Model {
   }
 
   _createModelsHash() {
-    return mapValues(Store.modelsHash, () => {
-      return {};
-    });
+    return Object.keys(Store.modelsHash).reduce((hash, key) => {
+      hash[key] = {};
+      return hash;
+    }, {});
   }
 
   _toSerial(data, store) {
@@ -107,8 +109,10 @@ class Store extends Model {
   }
 
   _toSerialState(state, store) {
-    return mapValues(state, (value, key) =>
-      this._toSerial(state[key], store)
+    const _state = omit(state, 'store');
+
+    return mapValues(_state, (value, key) =>
+      this._toSerial(_state[key], store)
     );
   }
 
@@ -153,9 +157,10 @@ class Store extends Model {
       return newModelHash[_id];
     }
 
-    const newModel = new Store.modelsHash[_constructor](
-      this._fromSerial(models[_constructor][_id], models, newModels)
-    );
+    const newModel = new Store.modelsHash[_constructor](Object.assign(
+      this._fromSerial(models[_constructor][_id], models, newModels),
+      { store: this }
+    ));
 
     return newModelHash[_id] = newModel;
   }
