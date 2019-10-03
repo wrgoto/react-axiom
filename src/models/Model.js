@@ -67,6 +67,7 @@ class Model extends Publisher {
 
   setState(nextState) {
     const { prev, next, diff } = this._diffState(nextState);
+    const prevState = { ...this.state };
 
     if (diff) {
       // FOR LOGGING
@@ -76,8 +77,14 @@ class Model extends Publisher {
       // console.groupEnd();
 
       Object.assign(this.state, nextState);
+      this.modelDidUpdate(prevState);
       this.publish();
     }
+  }
+
+  modelDidUpdate() {
+    // Template method for invoking behavior after
+    // a model has correctly updated state.
   }
 
 
