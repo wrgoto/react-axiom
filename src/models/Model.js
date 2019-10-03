@@ -67,7 +67,7 @@ class Model extends Publisher {
 
   setState(nextState) {
     const { prev, next, diff } = this._diffState(nextState);
-    const prevState = { ...this.state };
+    const prevState = Object.assign({}, this.state);
 
     if (diff) {
       // FOR LOGGING
