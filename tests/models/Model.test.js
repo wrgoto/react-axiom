@@ -5,7 +5,8 @@ import Model from '../../src/models/Model';
 // TEST CONSTANTS
 //================
 
-const obj = { id: '1' };
+const id = '1';
+const obj = { id };
 const arr = [];
 
 
@@ -41,7 +42,7 @@ describe('Model', () => {
   let modelWithDefaultState;
 
   beforeEach(() => {
-    model = new Test({ id: '1', obj, arr });
+    model = new Test({ id, obj, arr });
     modelWithoutState = new TestWithoutState();
     modelWithDefaultState = new TestWithDefaultState();
   });
@@ -120,6 +121,7 @@ describe('Model', () => {
 
   describe('setState', () => {
     beforeEach(() => {
+      spyOn(model, 'modelDidUpdate');
       spyOn(model, 'publish');
     });
 
@@ -130,6 +132,10 @@ describe('Model', () => {
 
       it('should update the state', () => {
         expect(model.state.id).toBe('2');
+      });
+
+      it('should call modelDidUpdate with the previous state', () => {
+        expect(model.modelDidUpdate).toBeCalledWith({ id, test: true, obj, arr });
       });
 
       it('should call publish', () => {
@@ -145,6 +151,10 @@ describe('Model', () => {
 
       it('should update the state via mutation', () => {
         expect(model.state.obj.id).toBe('2');
+      });
+
+      it('should not call modelDidUpdate', () => {
+        expect(model.modelDidUpdate).not.toBeCalled();
       });
 
       it('should not call publish', () => {
