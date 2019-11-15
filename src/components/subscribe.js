@@ -33,20 +33,20 @@ export default function subscribe(Component) {
     // REACT METHODS
     //===============
 
-    componentWillMount() {
+    componentDidMount() {
       this._getPublishables().forEach(this._subscribe);
     }
 
-    componentWillReceiveProps(nextProps) {
-      Object.keys(nextProps).forEach(key => {
-        if (nextProps[key] === this.props[key]) return;
-
-        if (this._isPublishable(nextProps[key])) {
-          this._subscribe(nextProps[key]);
-        }
+    componentDidUpdate(prevProps) {
+      Object.keys(this.props).forEach(key => {
+        if (this.props[key] === prevProps[key]) return;
 
         if (this._isPublishable(this.props[key])) {
-          this._unsubscribe(this.props[key]);
+          this._subscribe(this.props[key]);
+        }
+
+        if (this._isPublishable(prevProps[key])) {
+          this._unsubscribe(prevProps[key]);
         }
       });
     }

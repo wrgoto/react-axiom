@@ -1,7 +1,9 @@
 import React      from 'react';
-import TestUtils  from 'react-dom/test-utils';
+import Enzyme     from 'enzyme';
+import Adapter    from 'enzyme-adapter-react-16';
 import subscribe  from '../../src/components/subscribe';
 
+Enzyme.configure({ adapter: new Adapter() });
 
 //================
 // TEST CONSTANTS
@@ -46,6 +48,7 @@ const PureSubscriber = subscribe(() => {});
 
 describe('Subscriber', () => {
   let component;
+  let instance;
 
   beforeEach(() => {
     spyOn(publishable, 'subscribe');
@@ -56,9 +59,11 @@ describe('Subscriber', () => {
     spyOn(nextPublishable, 'unsubscribe');
     spyOn(nextPublishable, 'publish');
 
-    component = TestUtils.renderIntoDocument(
+    component = Enzyme.shallow(
       <TestSubscriber name="test" publishable={publishable} nullProp={null} />
     );
+
+    instance = component.instance();
   });
 
   describe('displayName', () => {
@@ -84,56 +89,57 @@ describe('Subscriber', () => {
     });
   });
 
-  describe('componentWillMount', () => {
+  describe('componentDidMount', () => {
     it('should subscribe forceUpdate to the publishable', () => {
-      expect(publishable.subscribe).toBeCalledWith(component.forceUpdate);
+      expect(publishable.subscribe).toBeCalledWith(instance.forceUpdate);
     });
   });
 
-  describe('componentWillReceiveProps', () => {
+  describe('componentDidUpdate', () => {
     describe('when next prop is not a publishable', () => {
       beforeEach(() => {
-        component.componentWillReceiveProps({ name: 'test', publishable: {} })
+        component.setProps({ name: 'test', publishable: {} })
       });
 
       it('should unsubscribe the current publishable', () => {
-        expect(publishable.unsubscribe).toBeCalledWith(component.forceUpdate);
+        expect(publishable.unsubscribe).toBeCalledWith(instance.forceUpdate);
       });
     });
 
     describe('when next prop is a publishable', () => {
       beforeEach(() => {
-        component.componentWillReceiveProps({ name: 'test', publishable: nextPublishable })
+        component.setProps({ name: 'test', publishable: nextPublishable })
       });
 
       it('should subscribe the next publishable', () => {
-        expect(nextPublishable.subscribe).toBeCalledWith(component.forceUpdate);
+        expect(nextPublishable.subscribe).toBeCalledWith(instance.forceUpdate);
       });
 
       it('should unsubscribe the current publishable', () => {
-        expect(publishable.unsubscribe).toBeCalledWith(component.forceUpdate);
+        expect(publishable.unsubscribe).toBeCalledWith(instance.forceUpdate);
       });
     });
 
     describe('when current prop is not a publishable and next prop is a publishable', () => {
       beforeEach(() => {
-        component = TestUtils.renderIntoDocument(<TestSubscriber name="test" publishable={{}} />);
-        component.componentWillReceiveProps({ name: 'test', publishable: nextPublishable })
+        component = Enzyme.shallow(<TestSubscriber name="test" publishable={{}} />);
+        component.setProps({ name: 'test', publishable: nextPublishable })
+        instance = component.instance();
       });
 
       it('should subscribe the next publishable', () => {
-        expect(nextPublishable.subscribe).toBeCalledWith(component.forceUpdate);
+        expect(nextPublishable.subscribe).toBeCalledWith(instance.forceUpdate);
       });
     });
   });
 
   describe('componentWillUnmount', () => {
     beforeEach(() => {
-      component.componentWillUnmount();
+      component.unmount();
     });
 
     it('should subscribe forceUpdate to the publishable', () => {
-      expect(publishable.unsubscribe).toBeCalledWith(component.forceUpdate);
+      expect(publishable.unsubscribe).toBeCalledWith(instance.forceUpdate);
     });
   });
 
@@ -141,7 +147,7 @@ describe('Subscriber', () => {
     let childComponent;
 
     beforeEach(() => {
-      childComponent = TestUtils.findRenderedComponentWithType(component, TestComponent);
+      childComponent = component.find('TestComponent');
     });
 
     it('should render the provided component', () => {
@@ -149,11 +155,11 @@ describe('Subscriber', () => {
     });
 
     it('should include non-model props', () => {
-      expect(childComponent.props.name).toBe('test');
+      expect(childComponent.props().name).toBe('test');
     });
 
     it('should include model props', () => {
-      expect(childComponent.props.publishable).toBe(publishable);
+      expect(childComponent.props().publishable).toBe(publishable);
     });
   });
 });
