@@ -5,7 +5,8 @@
   "repository": "https://github.com/wgoto/react-axiom",
   "main": "lib/index.js",
   "engines": {
-    "node": ">=4.0.0"
+    "node": "12.13.0",
+    "yarn": "1.19.1"
   },
   "scripts": {
     "build": "BABEL_ENV=cjs babel src --out-dir lib --copy-files",
@@ -22,12 +23,13 @@
     "react": "^15.0.0-0 || ^16.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-jest": "^21.2.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.4.2",
+    "babel-loader": "^8.0.0",
     "codecov": "^2.3.0",
     "jest": "^21.2.0",
     "react": "^15.6.2",
