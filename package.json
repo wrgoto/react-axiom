@@ -16,7 +16,7 @@
   "author": "Will Goto <will.r.goto@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "hoist-non-react-statics": "^2.3.1",
+    "hoist-non-react-statics": "^3.3.1",
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
