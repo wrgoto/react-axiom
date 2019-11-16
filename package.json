@@ -1,11 +1,12 @@
 {
   "name": "react-axiom",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "description": "React Axiom is a way to use models with React.",
   "repository": "https://github.com/wgoto/react-axiom",
   "main": "lib/index.js",
   "engines": {
-    "node": ">=4.0.0"
+    "node": "12.13.0",
+    "yarn": "1.19.1"
   },
   "scripts": {
     "build": "BABEL_ENV=cjs babel src --out-dir lib --copy-files",
@@ -15,23 +16,26 @@
   "author": "Will Goto <will.r.goto@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "hoist-non-react-statics": "^2.3.1",
-    "lodash": "^4.17.4"
+    "hoist-non-react-statics": "^3.3.1",
+    "lodash": "^4.17.15"
   },
   "peerDependencies": {
     "react": "^15.0.0-0 || ^16.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-jest": "^21.2.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
-    "codecov": "^2.3.0",
-    "jest": "^21.2.0",
-    "react": "^15.6.2",
-    "react-dom": "^15.6.2"
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.0",
+    "codecov": "^3.6.1",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
+    "jest": "^23.6.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
   },
   "jest": {
     "collectCoverage": true,
