@@ -107,7 +107,7 @@ describe('Store', () => {
   describe('parse', () => {
     describe('with non-Model data', () => {
       beforeEach(() => {
-        state = { string, number, float, bool, array, object, entityDefinitions };
+        state = { string, number, float, bool, array, object, entityDefinitions, listItems: {}, lists: {} };
         store = new Store(state);
         output = store.stringify();
         store = new Store({ entityDefinitions });
@@ -226,7 +226,7 @@ describe('Store', () => {
   describe('parseMerge', () => {
     beforeEach(() => {
       subState = { number, float, bool, array, object };
-      state = { string, number, float, bool, array, object, entityDefinitions };
+      state = { string, number, float, bool, array, object, entityDefinitions, listItems: {}, lists: {} };
       store = new Store(subState);
       output = store.stringify();
       store = new Store({ string, number: {}, entityDefinitions });
@@ -303,6 +303,7 @@ describe('Store', () => {
         entityDefinitions: {
           listItems: ListItem,
           lists: List,
+          newEntity: {},
           falseEntity: {}
         },
         listItems: {
@@ -311,7 +312,8 @@ describe('Store', () => {
         },
         lists: {
           1: list1,
-        }
+        },
+        falseEntity: false
       };
 
       store = new Store(state);
@@ -332,6 +334,16 @@ describe('Store', () => {
     describe('when a false entity is not correctly stored', () => {
       it('should not define a find function', () => {
         expect(store.findFalseEntity).not.toBeDefined();
+      });
+    });
+
+    describe('when a new entity is not stored', () => {
+      it('should create an findNewEntity function', () => {
+        expect(store.findNewEntity).toBeDefined();
+      });
+
+      it('should create an empty object for the new entity', () => {
+        expect(store.state.newEntity).toEqual({});
       });
     });
   });

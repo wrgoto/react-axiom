@@ -1,5 +1,6 @@
-import isPlainObject  from 'lodash/isPlainObject';
 import find           from 'lodash/find';
+import isUndefined    from 'lodash/isUndefined';
+import isPlainObject  from 'lodash/isPlainObject';
 import map            from 'lodash/map';
 import mapValues      from 'lodash/mapValues';
 import omit           from 'lodash/omit';
@@ -91,6 +92,10 @@ class Store extends Model {
   _createEntityHelper(key) {
     const cappedKey = key[0].toUpperCase() + key.substring(1);
     const findKey = `find${cappedKey}`;
+
+    if (isUndefined(this.state[key])) {
+      this.state[key] = {};
+    }
 
     if (isPlainObject(this.state[key])) {
       this.constructor.prototype[findKey] = this[findKey] || function (id) {
